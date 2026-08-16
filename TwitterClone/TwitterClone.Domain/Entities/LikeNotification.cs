@@ -8,13 +8,18 @@ namespace TwitterClone.Domain.Entities
     {
         
 
-        public LikeNotification(int likeByUserId) : base("Like")
+        public LikeNotification(Guid likeByUserId) : base("Like")
         {
             LikeByUserId = likeByUserId;
         }
         //ekhane nicher line e field ba variable declare
         //na kore kno direct get set korlo???
         //private string _LikeByUserId;
-        public int LikeByUserId { get; set; }
+        public Guid  LikeByUserId { get; set; }
+
+        public override string GetMessage()
+        {
+            return $"User with ID {LikeByUserId} liked your post.";
+        }
     }
 }

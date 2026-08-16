@@ -6,7 +6,7 @@ namespace TwitterClone.Domain.Entities
 {
     public  class CommentNotification : Notification
     {
-        public CommentNotification(int commentByUserId) : base("Comment")
+        public CommentNotification(Guid  commentByUserId) : base("Comment")
         {
             CommentByUserId = commentByUserId;
             //ekhane commentByUserId jeta ditesi oita e paitesi
@@ -15,7 +15,11 @@ namespace TwitterClone.Domain.Entities
         //ekhane nicher line e field ba variable declare
         //na kore kno direct get set korlo???
         //private string _CommentByUserId;
-        public int CommentByUserId { get; set; }
+        public Guid  CommentByUserId { get; set; }
+        public override string GetMessage()
+        {
+            return $"User with ID {CommentByUserId} commented on your post.";
+        }
     }
     
 }
