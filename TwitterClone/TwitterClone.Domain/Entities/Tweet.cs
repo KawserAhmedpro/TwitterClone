@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TwitterClone.Domain.Entities
 {
-    public class Tweet : BaseEntity
+    public class Tweet : BaseEntity, Ilikeable 
     {
         
         private Guid _userId;
@@ -18,7 +18,7 @@ namespace TwitterClone.Domain.Entities
            
         }
 
-        
+        public static int MaxContentLength = 280; // Twitter's character limit for a tweet
 
         public Guid UserId
         {
@@ -32,7 +32,12 @@ namespace TwitterClone.Domain.Entities
             set { _content = value; }
         }
 
+        // Implement the Ilikeable interface method
+        public bool Canbelike()
+        {
+            // simple default implementation; adjust logic as needed
+            return true;
+        }
         
-
     }
 }
