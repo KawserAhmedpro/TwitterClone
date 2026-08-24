@@ -41,7 +41,13 @@ var notifications = new List<Notification>
 
 
 
+
 foreach (var notification in notifications)
 {
     Console.WriteLine($" {notification.GetMessage()}");
 }
+
+Ilikeable ilikeable = new Tweet(); // Upcasting to Ilikeable interface
+
+ilikeable.Canbelike();
+Console.WriteLine($"Max Tweet Length: {Tweet.MaxContentLength}") ;
