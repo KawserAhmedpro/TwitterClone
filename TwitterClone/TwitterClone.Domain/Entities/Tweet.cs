@@ -13,9 +13,9 @@ namespace TwitterClone.Domain.Entities
         private string _content;
        
 
-        public Tweet(): base (Guid.NewGuid())
+        public Tweet(string content): base (Guid.NewGuid())
         {
-           
+            _content = content;
         }
 
         public static int MaxContentLength = 280; // Twitter's character limit for a tweet
