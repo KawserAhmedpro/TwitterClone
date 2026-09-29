@@ -1,59 +1,92 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TwitterClone.api.Controllers
+namespace TwitterClone.Api.Controllers
 {
+
+    // api/users
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
-        public UsersController()
-        {
-        }
-        // GET: api/Users
+
+        public UsersController() { }
+
+
+        // /api/users
         [HttpGet]
-        [Authorize]
-        public IActionResult GetUsers() => Ok(new[]
-    {
-            new { UserId = Guid.NewGuid(), UserName = "Ratul" },
-            new { UserId = Guid.NewGuid(), UserName = "Shuvo" },
-            new { UserId = Guid.NewGuid(), UserName = "CPS Academy" }
-        });
-        // POST: api/Users
+        public IActionResult GetUsers()
+        {
+            return Ok(new List<object>
+            {
+                new
+                {
+                    UserId = Guid.NewGuid(),
+                    UserName = "user1",
+                },
+                new
+                {
+                    UserId = Guid.NewGuid(),
+                    UserName = "user2",
+                },
+            });
+        }
+
+        // /api/users
         [HttpPost]
-        [AllowAnonymous] 
+        [AllowAnonymous]
         public IActionResult CreateUser()
         {
-            return Ok(new { UserId = Guid.NewGuid(), UserName = "NewUser" });
+            return Ok(new
+            {
+                UserId = Guid.NewGuid(),
+                UserName = "newuser",
+            });
         }
 
-        // GET: api/Users/{id} 
+
+        // /api/users/{id}
         [HttpGet("{id}")]
-        [Authorize]
         public IActionResult GetUserById([FromRoute] Guid id)
         {
-            return Ok(new { UserId = id, UserName = "User" + id.ToString() });
-
+            return Ok(new
+            {
+                UserId = id,
+                UserName = "user" + id.ToString(),
+            });
         }
-        // PUT: api/Users/{id}
+
+
+        // PUT /api/users/{id}
         [HttpPut("{id}")]
         public IActionResult UpdateUser([FromRoute] Guid id)
         {
-            return Ok(new { UserId = id, UserName = "UpdatedUser" + id.ToString() });
-        }
-        // PATCH: api/Users/{id}/phoneNumber
-        [HttpPatch("{id}/phoneNumber")]
-        public IActionResult UpdateUserPhoneNumber([FromRoute] Guid id, [FromBody] string newPhoneNumber)
-        {
-            return Ok(new { UserId = id, UserName = "UpdatedUser" + id.ToString(), NewPhoneNumber = newPhoneNumber });
+            return Ok(new
+            {
+                UserId = id,
+                UserName = "updateduser" + id.ToString(),
+            });
         }
 
-        // DELETE: api/Users/{id}
+
+        // PATCH /api/users/{id}/phoneNumber
+        [HttpPatch("{id}/phoneNumber")]
+        public IActionResult UpdateUserPhoneNumber([FromRoute] Guid id, [FromBody] string phoneNumber)
+        {
+            return Ok("hello");
+
+        }
+
+        // DELETE /api/users/{id}
         [HttpDelete("{id}")]
         public IActionResult DeleteUser([FromRoute] Guid id)
         {
-            return Ok(new { UserId = id, UserName = "DeletedUser" + id.ToString() });
+            return Ok(new
+            {
+                UserId = id,
+                Message = "User deleted successfully.",
+            });
         }
     }
-} 
+}

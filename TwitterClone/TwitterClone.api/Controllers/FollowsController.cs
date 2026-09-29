@@ -1,63 +1,113 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TwitterClone.api.Controllers
+namespace TwitterClone.Api.Controllers
 {
+
+    // api/follows
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class FollowsController : ControllerBase
     {
-        public FollowsController()
+
+        public FollowsController() { }
+
+
+        // GET /api/follows?followerId={followerId}&followingId={followingId}
+        [HttpGet]
+        public IActionResult GetFollows([FromQuery] Guid? followerId, [FromQuery] Guid? followingId)
         {
+            return Ok(new List<object>
+            {
+                new
+                {
+                    FollowId = Guid.NewGuid(),
+                    FollowerId = followerId ?? Guid.NewGuid(),
+                    FollowingId = followingId ?? Guid.NewGuid(),
+                    CreatedAt = DateTime.UtcNow.AddDays(-7),
+                },
+                new
+                {
+                    FollowId = Guid.NewGuid(),
+                    FollowerId = followerId ?? Guid.NewGuid(),
+                    FollowingId = followingId ?? Guid.NewGuid(),
+                    CreatedAt = DateTime.UtcNow.AddDays(-1),
+                },
+            });
         }
-        // POST: api/Follows
-        [HttpPost]
-        public IActionResult FollowUser([FromBody] Guid userIdToFollow)
+
+        // GET /api/follows/{id}
+        [HttpGet("{id}")]
+        public IActionResult GetFollowById([FromRoute] Guid id)
         {
-            // Here you would typically add the follow relationship to your database
-            return Ok(new { Message = $"You are now following user with ID: {userIdToFollow}" });
+            return Ok(new
+            {
+                FollowId = id,
+                FollowerId = Guid.NewGuid(),
+                FollowingId = Guid.NewGuid(),
+                CreatedAt = DateTime.UtcNow,
+            });
         }
-        // POST: api/Follows/unfollow
-        [HttpPost("unfollow")]
-        public IActionResult UnfollowUser([FromBody] Guid userIdToUnfollow)
-        {
-            // Here you would typically remove the follow relationship from your database
-            return Ok(new { Message = $"You have unfollowed user with ID: {userIdToUnfollow}" });
-        }
-        // GET: api/Follows/followers/{userId}
+
+        // GET /api/follows/followers/{userId}
         [HttpGet("followers/{userId}")]
         public IActionResult GetFollowers([FromRoute] Guid userId)
         {
-            // Here you would typically retrieve the list of followers from your database
-            var followers = new[]
+            return Ok(new List<object>
             {
-                new { FollowerId = Guid.NewGuid(), FollowerName = "Follower1" },
-                new { FollowerId = Guid.NewGuid(), FollowerName = "Follower2" }
-            };
-            return Ok(followers);
+                new
+                {
+                    UserId = Guid.NewGuid(),
+                    UserName = "follower1",
+                },
+                new
+                {
+                    UserId = Guid.NewGuid(),
+                    UserName = "follower2",
+                },
+            });
         }
-        // GET: api/Follows/following/{userId}
+
+        // GET /api/follows/following/{userId}
         [HttpGet("following/{userId}")]
         public IActionResult GetFollowing([FromRoute] Guid userId)
         {
-            // Here you would typically retrieve the list of users that the specified user is following from your database
-            var following = new[]
+            return Ok(new List<object>
             {
-                new { FollowingId = Guid.NewGuid(), FollowingName = "Following1" },
-                new { FollowingId = Guid.NewGuid(), FollowingName = "Following2" }
-            };
-            return Ok(following);
-
+                new
+                {
+                    UserId = Guid.NewGuid(),
+                    UserName = "following1",
+                },
+                new
+                {
+                    UserId = Guid.NewGuid(),
+                    UserName = "following2",
+                },
+            });
         }
-        // GET: api/Follows/status/{userId}?targetUserId={targetUserId}
-        [HttpGet("status/{userId}")]
-        public IActionResult GetFollowStatus([FromRoute] Guid userId, [FromQuery] Guid targetUserId)
+
+        // POST /api/follows
+        [HttpPost]
+        public IActionResult CreateFollow()
         {
-            // Here you would typically check the follow status from your database
-            bool isFollowing = true; // This is just a placeholder value
-            return Ok(new { UserId = userId, TargetUserId = targetUserId, IsFollowing = isFollowing });
+            return Ok(new
+            {
+                FollowId = Guid.NewGuid(),
+                FollowerId = Guid.NewGuid(),
+                FollowingId = Guid.NewGuid(),
+                CreatedAt = DateTime.UtcNow,
+            });
+        }
+
+        // DELETE /api/follows/{id}
+        [HttpDelete("{id}")]
+        public IActionResult DeleteFollow([FromRoute] Guid id)
+        {
+            return Ok(new
+            {
+                FollowId = id,
+                Message = "Unfollowed successfully.",
+            });
         }
     }
 }

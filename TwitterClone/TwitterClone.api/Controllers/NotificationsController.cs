@@ -1,69 +1,135 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TwitterClone.api.Controllers
+namespace TwitterClone.Api.Controllers
 {
+
+    // api/notifications
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class NotificationsController : ControllerBase
     {
-        public NotificationsController()
-        {
-        }
-        // GET: api/Notifications
+
+        public NotificationsController() { }
+
+
+        // GET /api/notifications?userId={userId}&type={type}&isRead={isRead}
         [HttpGet]
-        public IActionResult GetNotifications()
+        public IActionResult GetNotifications([FromQuery] Guid? userId, [FromQuery] string? type, [FromQuery] bool? isRead)
         {
-            var notifications = new[]
-            {
-                new { NotificationId = Guid.NewGuid(), Message = "You have a new follower!" },
-                new { NotificationId = Guid.NewGuid(), Message = "Your tweet has been liked!" },
-                new { NotificationId = Guid.NewGuid(), Message = "You have a new mention!" }
-            };
-            return Ok(notifications);
+            var triggeredByUserId = Guid.NewGuid();
 
-          
-        }
-        // GET: api/Notifications/{notificationId}
-        [HttpGet("{notificationId}")]
-        [Authorize]
-        public IActionResult GetNotificationById([FromRoute] Guid notificationId)
-        {
-            // Here you would typically retrieve the notification from your database
-            return Ok(new { NotificationId = notificationId, Message = "This is a sample notification message." });
-        }
-        // GET: api/Notifications/user/{userId}
-        [HttpGet("user/{userId}")]
-        [Authorize]
-        public IActionResult GetNotificationsByUserId([FromRoute] Guid userId)
-        {
-            // Here you would typically retrieve notifications for the specified user from your database
-            var notifications = new[]
+            return Ok(new List<object>
             {
-                new { NotificationId = Guid.NewGuid(), UserId = userId, Message = "You have a new follower!" },
-                new { NotificationId = Guid.NewGuid(), UserId = userId, Message = "Your tweet has been liked!" },
-                new { NotificationId = Guid.NewGuid(), UserId = userId, Message = "You have a new mention!" }
-            };
-            return Ok(notifications);
-        }
-        //  POST: api/Notifications
-        [HttpDelete]
-        [Authorize]
-        public IActionResult DeleteNotification([FromBody] Guid notificationId)
-        {
-            // Here you would typically delete the notification from your database
-            return Ok(new { Message = $"Notification with ID: {notificationId} deleted successfully!" });
-        }
-        // PUT: api/Notifications
-        [HttpPut]
-        [Authorize]
-        public IActionResult UpdateNotification([FromBody] Guid notificationId, [FromBody] string updatedMessage)
-        {
-            // Here you would typically update the notification in your database
-            return Ok(new { Message = $"Notification with ID: {notificationId} updated successfully!", UpdatedMessage = updatedMessage });
+                new
+                {
+                    NotificationId = Guid.NewGuid(),
+                    UserId = userId ?? Guid.NewGuid(),
+                    Type = "Like",
+                    Message = $"User with ID {triggeredByUserId} liked your post.",
+                    IsRead = false,
+                    CreatedAt = DateTime.UtcNow.AddMinutes(-20),
+                },
+                new
+                {
+                    NotificationId = Guid.NewGuid(),
+                    UserId = userId ?? Guid.NewGuid(),
+                    Type = "Comment",
+                    Message = $"User with ID {triggeredByUserId} commented on your post.",
+                    IsRead = false,
+                    CreatedAt = DateTime.UtcNow.AddMinutes(-15),
+                },
+                new
+                {
+                    NotificationId = Guid.NewGuid(),
+                    UserId = userId ?? Guid.NewGuid(),
+                    Type = "Mention",
+                    Message = $"User with ID {triggeredByUserId} mentioned you in a post.",
+                    IsRead = true,
+                    CreatedAt = DateTime.UtcNow.AddMinutes(-10),
+                },
+                new
+                {
+                    NotificationId = Guid.NewGuid(),
+                    UserId = userId ?? Guid.NewGuid(),
+                    Type = "FriendRequest",
+                    Message = $"User with ID {triggeredByUserId} sent you a friend request.",
+                    IsRead = true,
+                    CreatedAt = DateTime.UtcNow.AddMinutes(-5),
+                },
+                new
+                {
+                    NotificationId = Guid.NewGuid(),
+                    UserId = userId ?? Guid.NewGuid(),
+                    Type = "System",
+                    Message = "System Notification: Unknown Error",
+                    IsRead = false,
+                    CreatedAt = DateTime.UtcNow,
+                },
+            });
         }
 
+        // GET /api/notifications/{id}
+        [HttpGet("{id}")]
+        public IActionResult GetNotificationById([FromRoute] Guid id)
+        {
+            return Ok(new
+            {
+                NotificationId = id,
+                UserId = Guid.NewGuid(),
+                Type = "Like",
+                Message = $"User with ID {Guid.NewGuid()} liked your post.",
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow,
+            });
+        }
+
+        // POST /api/notifications
+        [HttpPost]
+        public IActionResult CreateNotification()
+        {
+            return Ok(new
+            {
+                NotificationId = Guid.NewGuid(),
+                UserId = Guid.NewGuid(),
+                Type = "System",
+                TriggeredByUserId = Guid.NewGuid(),
+                Message = "System Notification: Unknown Error",
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow,
+            });
+        }
+
+        // PATCH /api/notifications/{id}/read
+        [HttpPatch("{id}/read")]
+        public IActionResult MarkNotificationAsRead([FromRoute] Guid id)
+        {
+            return Ok(new
+            {
+                NotificationId = id,
+                IsRead = true,
+            });
+        }
+
+        // PATCH /api/notifications/read-all?userId={userId}
+        [HttpPatch("read-all")]
+        public IActionResult MarkAllNotificationsAsRead([FromQuery] Guid userId)
+        {
+            return Ok(new
+            {
+                UserId = userId,
+                Message = "All notifications marked as read.",
+            });
+        }
+
+        // DELETE /api/notifications/{id}
+        [HttpDelete("{id}")]
+        public IActionResult DeleteNotification([FromRoute] Guid id)
+        {
+            return Ok(new
+            {
+                NotificationId = id,
+                Message = "Notification deleted successfully.",
+            });
+        }
     }
 }

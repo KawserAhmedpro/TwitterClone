@@ -23,6 +23,9 @@
             set { _firstName = value; }
         }
 
+        public string LastName { get; set; }
+        public string Email { get; set; }
+
         public void Follow(Guid userId) { 
           
          if(!_followers.Contains(userId))

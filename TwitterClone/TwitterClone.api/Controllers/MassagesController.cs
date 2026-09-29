@@ -1,67 +1,135 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TwitterClone.api.Controllers
+namespace TwitterClone.Api.Controllers
 {
+
+    // api/messages
     [Route("api/[controller]")]
     [ApiController]
-    public class MassagesController : ControllerBase
+    public class MessagesController : ControllerBase
     {
-        [HttpPost]
-       public IActionResult SendMassage([FromBody] string massage)
-        {
-            // Here you would typically send the massage to the recipient
-            return Ok(new { Message = "Massage sent successfully!", Content = massage });
-        }
-        [HttpGet]
-        [Authorize]
-        public IActionResult GetMassages()
-        {
-            // Here you would typically retrieve massages from your database
-            var massages = new[]
-            {
-                new { MassageId = Guid.NewGuid(), Content = "Hello, how are you?" },
-                new { MassageId = Guid.NewGuid(), Content = "Don't forget our meeting tomorrow." },
-                new { MassageId = Guid.NewGuid(), Content = "Happy Birthday!" }
-            };
-            return Ok(massages);
-        }
-        [HttpDelete]
-        [Authorize  ]
-        public IActionResult DeleteMassage([FromBody] Guid massageId)
-        {
-            // Here you would typically delete the massage from your database
-            return Ok(new { Message = $"Massage with ID: {massageId} deleted successfully!" });
-        }
-        [HttpPut]
-        [Authorize]
 
-        public IActionResult UpdateMassage([FromBody] Guid massageId, [FromBody] string updatedContent)
+        public MessagesController() { }
+
+
+        // GET /api/messages?senderId={senderId}&receiverId={receiverId}
+        [HttpGet]
+        public IActionResult GetMessages([FromQuery] Guid? senderId, [FromQuery] Guid? receiverId)
         {
-            // Here you would typically update the massage in your database
-            return Ok(new { Message = $"Massage with ID: {massageId} updated successfully!", UpdatedContent = updatedContent });
-        }
-        [HttpGet("{massageId}")]
-        [Authorize]
-        public
-            IActionResult GetMassageById([FromRoute] Guid massageId)
-        {
-            // Here you would typically retrieve the massage from your database
-            return Ok(new { MassageId = massageId, Content = "This is a sample massage content." });
-        }
-        [HttpGet("user/{userId}")]
-        [Authorize]
-        public IActionResult GetMassagesByUserId([FromRoute] Guid userId)
-        {
-            // Here you would typically retrieve massages for the specified user from your database
-            var massages = new[]
+            return Ok(new List<object>
             {
-                new { MassageId = Guid.NewGuid(), UserId = userId, Content = "Hello, how are you?" },
-                new { MassageId = Guid.NewGuid(), UserId = userId, Content = "Don't forget our meeting tomorrow." },
-                new { MassageId = Guid.NewGuid(), UserId = userId, Content = "Happy Birthday!" }
-            };
-            return Ok(massages);
+                new
+                {
+                    MessageId = Guid.NewGuid(),
+                    SenderId = senderId ?? Guid.NewGuid(),
+                    ReceiverId = receiverId ?? Guid.NewGuid(),
+                    Content = "Hey, how are you?",
+                    SentAt = DateTime.UtcNow.AddMinutes(-15),
+                    IsRead = true,
+                },
+                new
+                {
+                    MessageId = Guid.NewGuid(),
+                    SenderId = senderId ?? Guid.NewGuid(),
+                    ReceiverId = receiverId ?? Guid.NewGuid(),
+                    Content = "Did you see my latest tweet?",
+                    SentAt = DateTime.UtcNow.AddMinutes(-5),
+                    IsRead = false,
+                },
+            });
+        }
+
+        // GET /api/messages/{id}
+        [HttpGet("{id}")]
+        public IActionResult GetMessageById([FromRoute] Guid id)
+        {
+            return Ok(new
+            {
+                MessageId = id,
+                SenderId = Guid.NewGuid(),
+                ReceiverId = Guid.NewGuid(),
+                Content = "message" + id.ToString(),
+                SentAt = DateTime.UtcNow,
+                IsRead = false,
+            });
+        }
+
+        // GET /api/messages/conversation?userId={userId}&otherUserId={otherUserId}
+        [HttpGet("conversation")]
+        public IActionResult GetConversation([FromQuery] Guid userId, [FromQuery] Guid otherUserId)
+        {
+            return Ok(new List<object>
+            {
+                new
+                {
+                    MessageId = Guid.NewGuid(),
+                    SenderId = userId,
+                    ReceiverId = otherUserId,
+                    Content = "Hi!",
+                    SentAt = DateTime.UtcNow.AddMinutes(-10),
+                    IsRead = true,
+                },
+                new
+                {
+                    MessageId = Guid.NewGuid(),
+                    SenderId = otherUserId,
+                    ReceiverId = userId,
+                    Content = "Hello back!",
+                    SentAt = DateTime.UtcNow.AddMinutes(-8),
+                    IsRead = false,
+                },
+            });
+        }
+
+        // POST /api/messages
+        [HttpPost]
+        public IActionResult SendMessage()
+        {
+            return Ok(new
+            {
+                MessageId = Guid.NewGuid(),
+                SenderId = Guid.NewGuid(),
+                ReceiverId = Guid.NewGuid(),
+                Content = "New message content.",
+                SentAt = DateTime.UtcNow,
+                IsRead = false,
+            });
+        }
+
+        // PUT /api/messages/{id}
+        [HttpPut("{id}")]
+        public IActionResult UpdateMessage([FromRoute] Guid id)
+        {
+            return Ok(new
+            {
+                MessageId = id,
+                SenderId = Guid.NewGuid(),
+                ReceiverId = Guid.NewGuid(),
+                Content = "updatedmessage" + id.ToString(),
+                ModifiedAt = DateTime.UtcNow,
+            });
+        }
+
+        // PATCH /api/messages/{id}/read
+        [HttpPatch("{id}/read")]
+        public IActionResult MarkMessageAsRead([FromRoute] Guid id)
+        {
+            return Ok(new
+            {
+                MessageId = id,
+                IsRead = true,
+            });
+        }
+
+        // DELETE /api/messages/{id}
+        [HttpDelete("{id}")]
+        public IActionResult DeleteMessage([FromRoute] Guid id)
+        {
+            return Ok(new
+            {
+                MessageId = id,
+                Message = "Message deleted successfully.",
+            });
         }
     }
 }
