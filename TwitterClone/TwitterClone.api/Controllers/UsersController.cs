@@ -1,11 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-<<<<<<< Updated upstream
-=======
 using TwitterClone.Application.Dtos;
 using TwitterClone.Application.Interfaces;
->>>>>>> Stashed changes
 
 namespace TwitterClone.Api.Controllers
 {
@@ -13,13 +10,6 @@ namespace TwitterClone.Api.Controllers
     // api/users
     [Route("api/[controller]")]
     [ApiController]
-<<<<<<< Updated upstream
-    [Authorize]
-    public class UsersController : ControllerBase
-    {
-
-        public UsersController() { }
-=======
     // [Authorize]
     public class UsersController : ControllerBase
     {
@@ -31,48 +21,20 @@ namespace TwitterClone.Api.Controllers
         {
             _userService = userService;
         }
->>>>>>> Stashed changes
 
 
         // GET /api/users
         [HttpGet]
-<<<<<<< Updated upstream
-        public IActionResult GetUsers()
-        {
-            return Ok(new List<object>
-            {
-                new
-                {
-                    UserId = Guid.NewGuid(),
-                    UserName = "user1",
-                },
-                new
-                {
-                    UserId = Guid.NewGuid(),
-                    UserName = "user2",
-                },
-            });
-=======
         [AllowAnonymous]
         [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
         public IActionResult GetUsers()
         {
             return Ok(_userService.GetUsers());
->>>>>>> Stashed changes
         }
 
         // POST /api/users
         [HttpPost]
         [AllowAnonymous]
-<<<<<<< Updated upstream
-        public IActionResult CreateUser()
-        {
-            return Ok(new
-            {
-                UserId = Guid.NewGuid(),
-                UserName = "newuser",
-            });
-=======
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -87,7 +49,6 @@ namespace TwitterClone.Api.Controllers
             }
 
             return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
->>>>>>> Stashed changes
         }
 
 
@@ -97,13 +58,6 @@ namespace TwitterClone.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetUserById([FromRoute] Guid id)
         {
-<<<<<<< Updated upstream
-            return Ok(new
-            {
-                UserId = id,
-                UserName = "user" + id.ToString(),
-            });
-=======
             var user = _userService.GetUserById(id);
 
             if (user == null)
@@ -112,21 +66,11 @@ namespace TwitterClone.Api.Controllers
             }
 
             return Ok(user);
->>>>>>> Stashed changes
         }
 
 
         // PUT /api/users/{id}
         [HttpPut("{id}")]
-<<<<<<< Updated upstream
-        public IActionResult UpdateUser([FromRoute] Guid id)
-        {
-            return Ok(new
-            {
-                UserId = id,
-                UserName = "updateduser" + id.ToString(),
-            });
-=======
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -140,7 +84,6 @@ namespace TwitterClone.Api.Controllers
             }
 
             return Ok(user);
->>>>>>> Stashed changes
         }
 
 
@@ -153,19 +96,6 @@ namespace TwitterClone.Api.Controllers
         {
             var user = _userService.UpdateUserPhoneNumber(id, phoneNumber);
 
-<<<<<<< Updated upstream
-        }
-
-        // DELETE /api/users/{id}
-        [HttpDelete("{id}")]
-        public IActionResult DeleteUser([FromRoute] Guid id)
-        {
-            return Ok(new
-            {
-                UserId = id,
-                Message = "User deleted successfully.",
-            });
-=======
             if (user == null)
             {
                 return NotFound();
@@ -188,7 +118,6 @@ namespace TwitterClone.Api.Controllers
             }
 
             return NoContent();
->>>>>>> Stashed changes
         }
     }
 }

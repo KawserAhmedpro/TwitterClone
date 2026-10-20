@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data_storage\**" />
+    <Compile Remove="Dtos\**" />
+    <Content Remove="Data_storage\**" />
+    <Content Remove="Dtos\**" />
+    <EmbeddedResource Remove="Data_storage\**" />
+    <EmbeddedResource Remove="Dtos\**" />
+    <None Remove="Data_storage\**" />
+    <None Remove="Dtos\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
@@ -15,11 +26,6 @@
     <ProjectReference Include="..\TwitterClone.Application\TwitterClone.Application.csproj" />
     <ProjectReference Include="..\TwitterClone.Domain\TwitterClone.Domain.csproj" />
     <ProjectReference Include="..\TwitterClone.Infrastructure\TwitterClone.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data_storage\" />
-    <Folder Include="Dtos\" />
   </ItemGroup>
 
 </Project>
