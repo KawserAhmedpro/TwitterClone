@@ -35,4 +35,3 @@ namespace TwitterClone.Api.Controllers
         }
     }
 }
-
