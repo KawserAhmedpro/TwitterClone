@@ -1,6 +1,20 @@
 @TwitterClone.api_HostAddress = http://localhost:5266
 
-GET {{TwitterClone.api_HostAddress}}/weatherforecast/
+### 1. Get All Users
+GET {{TwitterClone.api_HostAddress}}/api/users
 Accept: application/json
 
 ###
+
+### 2. Create User
+POST {{TwitterClone.api_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com"
+}
+
+###
+
