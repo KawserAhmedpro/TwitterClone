@@ -2,19 +2,16 @@
 {
     public class User : BaseEntity, IFollowable, INotifiable
     {
-        
+
+        public User() : base(Guid.NewGuid())
+        {
+
+        }
+
         private string _firstName;
         private string _lastName;
         private string _email;
-
-
-        public User(): base(Guid.NewGuid())
-        {
-            
-        }
-
-        private List<Guid> _followers = new List<Guid>();
-        private List<Guid> _incomingFollowRequests = new List<Guid>();
+        private string? _phoneNumber;
 
 
         public string FirstName
@@ -23,33 +20,55 @@
             set { _firstName = value; }
         }
 
-        public string LastName { get; set; }
-        public string Email { get; set; }
-
-        public void Follow(Guid userId) { 
-          
-         if(!_followers.Contains(userId))
-         {
-             _followers.Add(userId);
-         }
-         
-        }
-        public void Unfollow(Guid userId) {
-          if(!_followers.Contains(userId)) {
-                _followers.Remove(userId);
-          }
-        }
-
-
-        public void addNotification(Guid notificationId)
+        public string LastName
         {
-            if (!_incomingFollowRequests.Contains(notificationId))
-            {
-                _incomingFollowRequests.Add(notificationId);
-            }
-            // Implementation for adding a notification
+            get { return _lastName; }
+            set { _lastName = value; }
         }
 
+        public string Email
+        {
+            get { return _email; }
+            set { _email = value; }
+        }
 
+        public string? PhoneNumber
+        {
+            get { return _phoneNumber; }
+            set { _phoneNumber = value; }
+        }
+
+        private List<Guid> _followers = new List<Guid>();
+        private List<Guid> _inComingNotifications = new List<Guid>();
+
+        public override string DescribeRecord()
+        {
+            var baseRecord = base.DescribeRecord();
+            return $"{baseRecord}, FirstName: {FirstName}, LastName: {LastName}, Email: {Email}, PhoneNumber: {PhoneNumber}";
+        }
+
+        public void Follow(Guid userId)
+        {
+            if (!_followers.Contains(userId))
+            {
+                _followers.Add(userId);
+            }
+        }
+
+        public void Unfollow(Guid userId)
+        {
+            if (_followers.Contains(userId))
+            {
+                _followers.Remove(userId);
+            }
+        }
+
+        public void AddNotification(Guid notificationId)
+        {
+            if (!_inComingNotifications.Contains(notificationId))
+            {
+                _inComingNotifications.Add(notificationId);
+            }
+        }
     }
 }

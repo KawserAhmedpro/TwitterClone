@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace TwitterClone.Domain.Entities
 {
-    public  interface INotifiable
+    public interface INotifiable
     {
-        void addNotification(Guid notificationId);
+        void AddNotification(Guid notificationId);
     }
 }

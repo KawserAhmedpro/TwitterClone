@@ -2,17 +2,13 @@
 {
     public class Like : BaseEntity
     {
-        
         private Guid _userId;
         private Guid _tweetId;
-        
 
         public Like() : base(Guid.NewGuid())
         {
-              
-        }
 
-        
+        }
 
         public Guid UserId
         {
@@ -26,7 +22,10 @@
             set { _tweetId = value; }
         }
 
-        
-
+        public override string DescribeRecord()
+        {
+            var baseRecord = base.DescribeRecord();
+            return $"{baseRecord}, UserId: {UserId}, TweetId: {TweetId}";
+        }
     }
 }

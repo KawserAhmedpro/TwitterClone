@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace TwitterClone.Domain.Entities
 {
-    public class LikeNotification : Notification
+    public sealed class LikeNotification : Notification
     {
-        
 
         public LikeNotification(Guid likeByUserId) : base("Like")
         {
             LikeByUserId = likeByUserId;
         }
-        //ekhane nicher line e field ba variable declare
-        //na kore kno direct get set korlo???
-        //private string _LikeByUserId;
-        public Guid  LikeByUserId { get; set; }
+
+        public Guid LikeByUserId { get; set; }
+
+        public void AddMessage(string message)
+        {
+           string Message = message;
+        }
+
+
 
         public override string GetMessage()
         {
