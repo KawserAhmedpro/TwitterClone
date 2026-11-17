@@ -3,17 +3,26 @@ using System.Collections.Generic;
 using System.Text;
 using TwitterClone.Application.Interfaces;
 using TwitterClone.Domain.Entities;
+using TwitterClone.Infrastructure.Persistence;
 
 
 namespace TwitterClone.Infrastructure.Repository
 {
     public class UserRepository : IUserRepository
 
-    {
+    {   
+        private readonly TwitterCloneDbContext _context;
+
+        public UserRepository(TwitterCloneDbContext context)
+        { 
+            _context = context;
+        }
         private List<User> _user { get; set; } = new List<User>();
         public User AddUser(User user)
         {
-            _user.Add(user);
+          
+            _context.Users.Add(user);
+            _context.SaveChanges();
 
             return user;
         }

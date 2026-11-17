@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using TwitterClone.Application.Dtos;
 
 namespace TwitterClone.Application.Interfaces
 {
-    internal interface Interface1
+    public interface ITokenService
     {
+        (string, DateTime) GetToken(UserDto user);
     }
 }
